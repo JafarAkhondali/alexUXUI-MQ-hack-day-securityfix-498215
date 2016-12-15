@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="./styles/styles.css">
+
+    <script type="text/javascript">
+      function showHide(){
+        var oimageDiv=document.getElementById('searchingimageDiv')
+        oimageDiv.style.display=(oimageDiv.style.display=='none')?'flex':'none'
+      }
+    </script>
+  </head>
+  <body>
+
+    <div id="searchingimageDiv" style="display:none; position: absolute; height: 1000px; width: 100%; background-color: #eaeaea; align-items:center; flex-direction: column;">
+      <h1 style="font-size: 80px; margin-top: 350px;">Generating an awesome map!</h1>
+      <img src="./images/box.gif" alt="" style="height: 120px;">
+    </div>
+
+    <h1>Enter Six places to generate your 3D map experience!</h1>
+    <h2>much awesome</h2>
+
+    <form action="http://localhost:3000/get-maps" method="post">
+      <label for="map1">Enter a location</label>
+      <input type="text" name="map1" placeholder="choose a city or state">
+      <label for="map2">Enter a location</label>
+      <input type="text" name="map2" placeholder="choose a city or state">
+      <label for="map3">Enter a location</label>
+      <input type="text" name="map3" placeholder="choose a city or state">
+      <label for="map4">Enter a location</label>
+      <input type="text" name="map4" placeholder="choose a city or state">
+      <label for="map5">Enter a location</label>
+      <input type="text" name="map5" placeholder="choose a city or state">
+      <label for="map6">Enter a location</label>
+      <input type="text" name="map6" placeholder="choose a city or state">
+      <input type="submit" name="" placeholder="get map!" onclick='showHide()'>
+    </form>
+  </body>
+</html>

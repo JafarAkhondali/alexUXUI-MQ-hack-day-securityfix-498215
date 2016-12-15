@@ -1,0 +1,72 @@
+body {
+  background-color: #eaeaea;
+  font-family: sans-serif;
+}
+
+form {
+  background-color: white;
+  margin: auto;
+  width: 500px;
+  padding: 10px;
+}
+
+input, label {
+  display: block;
+  margin: auto;
+  width: 400px;
+  border: none;
+  margin: 3px;
+}
+
+input {
+  background-color: #eaeaee;
+  height: 60px;
+  margin: auto;
+  font-size: 16px;
+  color: #424242;
+  transition: all .5s;
+}
+
+label {
+  margin: auto;
+  padding: 5px;
+  padding-top: 20px;
+}
+
+input[type="submit"] {
+  height: 40px;
+  background-color: #424242;
+  margin-top: 50px;
+  color: white;
+  margin-bottom: 50px;
+
+}
+
+input[type="submit"]:hover {
+  background-color: blue;
+  color: white;
+}
+
+input:focus {
+  border-radius: 16px;
+  outline: none;
+  background-color: #424242;
+  color: white;
+}
+
+h1 {
+  margin: auto;
+  color: #424242;
+  width: 500px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+h2 {
+  width: 500px;
+  margin: auto;
+  text-align: center;
+  color: #ccc;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}

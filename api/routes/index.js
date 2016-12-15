@@ -1,66 +1,89 @@
 var express = require('express');
 var router = express.Router();
 var unirest = require('unirest');
-var http = require('http')
-var fs = require('fs')
+var http = require('http');
+var fs = require('fs');
+var findRemoveSync = require('find-remove');
 var app = express();
+require('dotenv').config();
 
-var baseUrl = 'http://www.mapquestapi.com';
-var API = 'staticmap/v4';
-var endpoint = 'getplacemap';
-var key = 'key='; // put key here
-var dimensions = 'size=600,600';
+var imageNames = [];
 
-var map = `${baseUrl}/${API}/${endpoint}?${key}&${dimensions}&zoom=13&location=los+angeles`;
+function removeImages(imageNames) {
+  return new Promise((resolve, reject) => {
+    imageNames = [];
+    resolve();
+  });
+}
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+function addImages(collection) {
+  return new Promise(function(resolve, reject) {
+    for(map in collection) {
+      console.log(`image title: ${collection[map]}`);
+      resolve(imageNames.push(collection[map]));
+    }
+  });
+}
 
-router.get('/static-map', (req, res, next) => {
-  var Request = unirest.get(map).end((response) => {
-    console.log('the map: ', response);
-  })
-  res.json({response: response})
-})
+router.post('/get-maps', (req, res, next) => {
 
-router.get('/save', function(req, res, next) {
-  http.get(map, (res) => {
-    var imagedata = ''
-    res.setEncoding('binary')
-    res.on('data', function(chunk){
-      imagedata += chunk
-    })
-    res.on('end', () => {
-      fs.writeFile('../assets/mq.png', imagedata, 'binary', (res, err) => {
-        if (err) throw err
-        console.log('File saved.')
-      })
-    })
-  })
-  res.send('got that image')
-})
+  removeImages(imageNames).then(function(data){
+    addImages(req.body);
+  });
 
-router.get('/logs',function(req,res){
-  var path = './images'
-  var imageContainer = [];
+  var baseUrl = 'http://beta.mapquestapi.com';
+  var API = 'staticmap/v5';
+  var endpoint = 'getmap';
+  var key = process.env.MQ_API_KEY;
+  var dimensions = 'size=600,600@2x';
 
-  // read dir
-  function readDirectory(callback){
-    fs.readdir(path, function(err, items) {
-      imageContainer.push(items);
-      callback(imageContainer);
+  function getStaticMap(currentMap) {
+    return new Promise(function(resolve, reject) {
+      var mapRequest = `${baseUrl}/${API}/${endpoint}?key=${key}&${dimensions}&locations=${currentMap}&defaultmarker=none&type=hyb`;
+      http.get(mapRequest, function(res) { // hit static map
+        console.log(`making request to static maps for ${currentMap}`);
+        var imagedata = '';
+        res.setEncoding('binary');
+        res.on('data', (chunk) => { imagedata += chunk });
+        res.on('end', () => {
+          fs.writeFile(`../client/assets/${currentMap}.png`, imagedata, 'binary', (res, err) => { // save it to the directory in client /assets
+            if (err) throw err
+            console.log('File saved.');
+            setTimeout(resolve(), 5000);
+          });
+        });
+      });
     });
   }
-  // push dir to client
-  readDirectory(function(logFiles){
-    res.json({files : logFiles});
+
+  (() => {
+    imageNames = [];
+    return new Promise((resolve, reject) => {
+      for(map in req.body) {
+        (function(map) {
+          setTimeout(function() {
+            resolve(getStaticMap(map))
+          }, 3000);
+        })(req.body[map]);
+      }
+    });
+  })().then(function(data){
+    res.redirect('http://localhost:1234')
   });
 });
 
+router.get('/image-titles', (req, res, next) => {
+  res.json({'titles' : imageNames})
+});
+
 router.get('/test', function(req, res, next) {
-  res.send('healthy')
-})
+  res.json({
+    'health' : 'healthy'
+  });
+});
+
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
 
 module.exports = router;
