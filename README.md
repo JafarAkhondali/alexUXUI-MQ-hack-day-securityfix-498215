@@ -8,13 +8,9 @@ VR web app w/ gesture based controls
 Set up the credentials (go wild w/ this key)
 
 ```
-echo "MQ_API_KEY=FsamFHTPoenx0vrUdboTC9cyK9Hb2TE2" >> .env
-```
-
-```
 $ git clone [this repo]
 $ cd [this repo]
-$ cd api && nodemon
+$ cd api && echo "MQ_API_KEY=FsamFHTPoenx0vrUdboTC9cyK9Hb2TE2" >> .env && nodemon
 
 open a new terminal tab
 
